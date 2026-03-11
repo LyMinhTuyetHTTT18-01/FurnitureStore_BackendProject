@@ -1,0 +1,58 @@
+﻿@model FurnitureStoreData.Models.Category
+
+@{
+    ViewData["Title"] = "Thêm mới Danh mục";
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Thêm mới Danh mục</h1>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card card-success">
+                    <div class="card-header">
+                        <h3 class="card-title">Nhập thông tin danh mục</h3>
+                    </div>
+
+                    <form asp-action="Create">
+                        <div class="card-body">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                            <div class="form-group">
+                                <label asp-for="Name" class="control-label">Tên danh mục</label>
+                                <input asp-for="Name" class="form-control" placeholder="Nhập tên..." />
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="Description" class="control-label">Mô tả</label>
+                                <textarea asp-for="Description" class="form-control" rows="4" placeholder="Nhập mô tả..."></textarea>
+                                <span asp-validation-for="Description" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Lưu lại</button>
+                            <a asp-action="Index" class="btn btn-default float-right">Quay lại</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
