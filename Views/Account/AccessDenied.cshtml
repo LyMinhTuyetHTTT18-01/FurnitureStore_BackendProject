@@ -1,0 +1,31 @@
+﻿@{
+    ViewData["Title"] = "Truy cập bị từ chối";
+    Layout = "_Layout"; // Vẫn dùng layout của khách hàng
+}
+
+<div class="container mt-5 mb-5 text-center" style="min-height: 50vh;">
+    <div class="row justify-content-center">
+        <div class="col-md-8 mt-5">
+            <h1 class="display-1 text-danger fw-bold">
+                <i class="fas fa-shield-alt"></i> 403
+            </h1>
+
+            <h2 class="text-uppercase fw-bold mt-3">Cảnh báo: Cấm truy cập!</h2>
+
+            <p class="lead mt-4 text-muted">
+                Bạn đang cố gắng truy cập vào khu vực Quản trị hoặc một trang không được cấp phép cho tài khoản của bạn. <br />
+                <strong>Hành động này đã bị hệ thống chặn lại để đảm bảo bảo mật.</strong>
+            </p>
+
+            <div class="mt-5">
+                <a asp-controller="Home" asp-action="Index" asp-area="" class="btn btn-primary btn-lg rounded-pill px-4 me-2">
+                    <i class="fas fa-home me-2"></i> Về Trang chủ
+                </a>
+
+                <a asp-controller="Account" asp-action="Logout" class="btn btn-outline-danger btn-lg rounded-pill px-4">
+                    <i class="fas fa-sign-out-alt me-2"></i> Đăng xuất
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
