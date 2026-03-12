@@ -4,44 +4,182 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - FurnitureStoreWeb</title>
-    <script type="importmap"></script>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/FurnitureStoreWeb.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
+    <link rel="stylesheet" href="~/Css/main.css">
+    <link rel="stylesheet" href="~/Css/main-moblie.css">
+    <title>Home</title>
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">FurnitureStoreWeb</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
+    <div class="header">
+        <div class="content">
+            <div class="box-menu-mobile">
+                <button>
+                    <i class="fa-solid fa-bars"></i>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
+            </div>
+            <nav class="box-menu">
+                <ul class="all-list-menu">
+                    <li>
+                        <a href="" class="hover-a">Home</a>
+                        <!-- <a href="">
+                            <i class="fa-solid fa-angle-down angle-down"></i>
+                        </a> -->
+                    </li>
+                    <li class="padding-list-menu">
+                        <a href="Page/Shop.html" class="hover-a">Shop</a>
+                        <!-- <a href="">
+                            <i class="fa-solid fa-angle-down angle-down"></i>
+                        </a> -->
+                    </li>
+                    <li class="padding-list-menu">
+                        <a href="Page/about.html" class="hover-a">About Us</a>
+                        <!-- <a href="">
+                            <i class="fa-solid fa-angle-down angle-down"></i>
+                        </a> -->
+                    </li>
+                    <li class="padding-list-menu">
+                        <a href="Page/blog.html" class="hover-a">Blog</a>
+                        <!-- <a href="">
+                            <i class="fa-solid fa-angle-down angle-down"></i>
+                        </a> -->
+                    </li>
+                    <li class="padding-list-menu">
+                        <a href="" class="hover-a">Page</a>
+                        <a href="">
+                            <i class="fa-solid fa-angle-down angle-down"></i>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <div class="box-logo">
+                <div class="logo">
+                    <a href="index.html">
+                        <img src="Picture/logo.png" alt="">
+                    </a>
                 </div>
             </div>
-        </nav>
-    </header>
+            <div class="box-icon">
+                <a href="" class="box-search">
+                    <i class="fa-solid fa-magnifying-glass search"></i>
+                </a>
+                <a href="Page/login.html" class="box-user">
+                    <i class="fa-regular fa-user user"></i>
+                </a>
+                <a href="" class="box-heart">
+                    <i class="fa-regular fa-heart heart"></i>
+                </a>
+                <a href="" class="box-cart">
+                    <i class="fa-solid fa-cart-shopping cart"></i>
+                </a>
+            </div>
+        </div>
+    </div>
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - FurnitureStoreWeb - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <!-- Phần footer -->
+    <div class="box-first-footer">
+        <div class="contact">
+            <h2>CONTACT US</h2>
+            <div class="in">
+                <div>Add :4 Copley Place, 7th Floor, Boston, MA 6</div>
+                <div>Tell : 866.453.4748</div>
+                <div>HR Fax: 810.222.5439</div>
+                <div>sales@funorifurniture.com</div>
+            </div>
         </div>
-    </footer>
+        <div class="contact">
+            <h2>CATEGOIRES</h2>
+            <div class="in">
+                <a href="">
+                    <div>Furniture</div>
+                </a>
+                <a href="">
+                    <div>Tables</div>
+                </a>
+                <a href="">
+                    <div>Seating</div>
+                </a>
+                <a href="">
+                    <div>Desks & office </div>
+                </a>
+                <a href="">
+                    <div>Storage</div>
+                </a>
+                <a href="">
+                    <div>Bed & Bath</div>
+                </a>
+            </div>
+        </div>
+        <div class="contact">
+            <h2>SERVICES</h2>
+            <div class="in">
+                <a href="">
+                    <div>Sale</div>
+                </a>
+                <a href="">
+                    <div>Quick Ship</div>
+                </a>
+                <a href="">
+                    <div>New Designs</div>
+                </a>
+                <a href="">
+                    <div>Accidental Fabric Protection</div>
+                </a>
+                <a href="">
+                    <div>Furniture Care</div>
+                </a>
+                <a href="">
+                    <div>Gift Cards</div>
+                </a>
+            </div>
+        </div>
+        <div class="contact">
+            <h2>JOIN US</h2>
+            <div class="in">
+                <div style="margin-bottom: 25px;">
+                    Enter your email below to be the first to know
+                    <br>
+                    about new collections and product launches.
+                </div>
+                <div class="box-email">
+                    <input type="text" placeholder="Email adress...">
+                    <button type="submit">
+                        <i class="fa-solid fa-envelope"></i>
+                    </button>
+                </div>
+                <div class="icon-contact">
+                    <ul>
+                        <li>
+                            <a href="">
+                                <i class="fa-brands fa-twitter"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="">
+                                <i class="fa-brands fa-instagram"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="">
+                                <i class="fa-brands fa-dribbble"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="">
+                                <i class="fa-brands fa-behance"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://kit.fontawesome.com/eda05fcf5c.js" crossorigin="anonymous"></script>
+    <script src="~/js/main.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
