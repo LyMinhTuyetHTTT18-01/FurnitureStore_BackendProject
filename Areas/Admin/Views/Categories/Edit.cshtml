@@ -1,59 +1,37 @@
 ﻿@model FurnitureStoreData.Models.Category
 
 @{
-    ViewData["Title"] = "Cập nhật Danh mục";
+    ViewData["Title"] = "Sửa Danh mục";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
-<section class="content-header">
-    <div class="container-fluid">
-        <div class="row mb-2">
-            <div class="col-sm-6">
-                <h1>Cập nhật Danh mục</h1>
-            </div>
-        </div>
-    </div>
-</section>
+<div class="content-header"><div class="container-fluid"><h1 class="m-0">Sửa Danh mục</h1></div></div>
 
 <section class="content">
     <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-8">
-                <div class="card card-success">
-                    <div class="card-header">
-                        <h3 class="card-title">Nhập thông tin danh mục</h3>
+        <div class="card card-warning shadow">
+            <div class="card-header"><h3 class="card-title">Cập nhật thông tin</h3></div>
+
+            <form asp-action="Edit" method="post">
+                <div class="card-body">
+                    <input type="hidden" asp-for="Id" />
+
+                    <div class="form-group mb-3">
+                        <label class="fw-bold">Tên danh mục <span class="text-danger">*</span></label>
+                        <input asp-for="Name" class="form-control" required />
                     </div>
 
-                    <form asp-action="Edit">
-                        <input type="hidden" asp-for="Id" />
-                        <div class="card-body">
-                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-                            <div class="form-group">
-                                <label asp-for="Name" class="control-label">Tên danh mục</label>
-                                <input asp-for="Name" class="form-control" placeholder="Nhập tên..." />
-                                <span asp-validation-for="Name" class="text-danger"></span>
-                            </div>
-
-                            <div class="form-group">
-                                <label asp-for="Description" class="control-label">Mô tả</label>
-                                <textarea asp-for="Description" class="form-control" rows="4" placeholder="Nhập mô tả..."></textarea>
-                                <span asp-validation-for="Description" class="text-danger"></span>
-                            </div>
-                        </div>
-
-                        <div class="card-footer">
-                            <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Lưu lại</button>
-                            <a asp-action="Index" class="btn btn-default float-right">Quay lại</a>
-                        </div>
-                    </form>
+                    <div class="form-group mb-3">
+                        <label class="fw-bold">Mô tả</label>
+                        <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                    </div>
                 </div>
-            </div>
+
+                <div class="card-footer bg-white">
+                    <button type="submit" class="btn btn-warning fw-bold"><i class="fas fa-save me-1"></i> Cập nhật</button>
+                    <a asp-action="Index" class="btn btn-secondary ms-2">Hủy bỏ</a>
+                </div>
+            </form>
         </div>
     </div>
 </section>
-
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-}

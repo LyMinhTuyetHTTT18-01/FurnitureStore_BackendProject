@@ -48,6 +48,7 @@ namespace FurnitureStoreWeb
             app.UseStatusCodePagesWithReExecute("/Home/Error", "?statusCode={0}");
 
             app.UseHttpsRedirection();
+            app.UseStaticFiles();
             app.UseRouting();
 
             // 3. KÍCH HOẠT SESSION 

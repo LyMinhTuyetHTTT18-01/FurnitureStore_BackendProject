@@ -1,0 +1,39 @@
+﻿@model FurnitureStoreData.Models.Product
+
+@{
+    ViewData["Title"] = "Xóa Sản phẩm";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="content-header"><div class="container-fluid"><h1 class="m-0 text-danger">Xóa Sản phẩm</h1></div></div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="alert alert-danger shadow">
+            <h5><i class="icon fas fa-ban"></i> Cảnh báo!</h5>
+            Bạn có chắc chắn muốn xóa sản phẩm <strong>@Model.Name</strong> này không? Hành động này không thể hoàn tác và ảnh của sản phẩm cũng sẽ bị xóa khỏi máy chủ!
+        </div>
+
+        <div class="card shadow">
+            <div class="card-body">
+                <table class="table table-bordered">
+                    <tr><th style="width: 200px;">ID:</th><td>@Model.Id</td></tr>
+                    <tr><th>Tên sản phẩm:</th><td class="text-primary fw-bold">@Model.Name</td></tr>
+                    <tr><th>Giá bán:</th><td class="text-danger fw-bold">@Model.Price.ToString("N0") VNĐ</td></tr>
+                    <tr><th>Danh mục:</th><td>@(Model.Category?.Name ?? "Trống")</td></tr>
+                    <tr>
+                        <th>Hình ảnh:</th>
+                        <td><img src="~/images/products/@Model.ImageUrl" style="width:80px; height:80px; object-fit:cover;" class="rounded" /></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="card-footer">
+                <form asp-action="Delete" method="post">
+                    <input type="hidden" asp-for="Id" />
+                    <button type="submit" class="btn btn-danger fw-bold"><i class="fas fa-trash me-1"></i> Xác nhận Xóa</button>
+                    <a asp-action="Index" class="btn btn-secondary ms-2">Hủy bỏ</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,13 +1,17 @@
-﻿@model IEnumerable<FurnitureStoreData.Models.Category>
+﻿@model IEnumerable<FurnitureStoreData.Models.Product>
 
 @{
-    ViewData["Title"] = "Quản lý Danh mục";
+    ViewData["Title"] = "Quản lý Sản phẩm";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
 <div class="content-header">
     <div class="container-fluid">
-        <h1 class="m-0">Danh sách Danh mục</h1>
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Danh sách Sản phẩm</h1>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -18,15 +22,16 @@
                 <div class="row">
                     <div class="col-md-4">
                         <a asp-action="Create" class="btn btn-success fw-bold">
-                            <i class="fas fa-plus me-1"></i> Thêm danh mục mới
+                            <i class="fas fa-plus me-1"></i> Thêm sản phẩm mới
                         </a>
                     </div>
+
                     <div class="col-md-8">
                         <form asp-action="Index" method="get" class="float-right form-inline">
                             <div class="input-group">
-                                <input type="text" name="searchString" value="@ViewBag.SearchString" class="form-control" placeholder="Tìm tên danh mục...">
+                                <input type="text" name="searchString" value="@ViewBag.SearchString" class="form-control" placeholder="Tìm tên sản phẩm...">
                                 <div class="input-group-append">
-                                    <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Tìm</button>
+                                    <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Tìm kiếm</button>
                                 </div>
                             </div>
                         </form>
@@ -35,19 +40,21 @@
             </div>
 
             <div class="card-body table-responsive p-0">
-                <table class="table table-hover table-bordered">
+                <table class="table table-hover table-bordered text-nowrap">
                     <thead class="bg-light">
                         <tr>
                             <th>ID</th>
-                            <th>Tên danh mục</th>
-                            <th>Mô tả</th>
+                            <th>Hình ảnh</th>
+                            <th>Tên sản phẩm</th>
+                            <th>Danh mục</th>
+                            <th>Giá bán</th>
                             <th class="text-center">Thao tác</th>
                         </tr>
                     </thead>
                     <tbody>
                         @if (!Model.Any())
                         {
-                            <tr><td colspan="4" class="text-center text-muted">Chưa có danh mục nào.</td></tr>
+                            <tr><td colspan="6" class="text-center text-muted">Không tìm thấy sản phẩm nào.</td></tr>
                         }
                         else
                         {
@@ -55,8 +62,19 @@
                             {
                                 <tr>
                                     <td>@item.Id</td>
-                                    <td class="font-weight-bold text-primary">@item.Name</td>
-                                    <td>@item.Description</td>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(item.ImageUrl))
+                                        {
+                                            <img src="~/images/products/@item.ImageUrl" style="width: 50px; height: 50px; object-fit: cover;" class="rounded" />
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">No Image</span>
+                                        }
+                                    </td>
+                                    <td class="font-weight-bold">@item.Name</td>
+                                    <td>@(item.Category?.Name ?? "Trống")</td>
+                                    <td class="text-danger font-weight-bold">@item.Price.ToString("N0") VNĐ</td>
                                     <td class="text-center">
                                         <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i> Sửa</a>
                                         <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i> Xóa</a>
@@ -75,7 +93,7 @@
                         @for (int i = 1; i <= ViewBag.TotalPages; i++)
                         {
                             <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
-                                <a class="page-link" href="/Admin/Categories?page=@i&searchString=@ViewBag.SearchString">@i</a>
+                                <a class="page-link" href="/Admin/Products?page=@i&searchString=@ViewBag.SearchString">@i</a>
                             </li>
                         }
                     </ul>

@@ -1,34 +1,35 @@
 ﻿@model FurnitureStoreData.Models.Category
 
 @{
-    ViewData["Title"] = "Delete";
-    Layout = "CategoriesController";
+    ViewData["Title"] = "Xóa Danh mục";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h1>Delete</h1>
+<div class="content-header"><div class="container-fluid"><h1 class="m-0 text-danger">Xóa Danh mục</h1></div></div>
 
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>Category</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-    </dl>
-    
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
-    </form>
-</div>
+<section class="content">
+    <div class="container-fluid">
+        <div class="alert alert-danger shadow">
+            <h5><i class="icon fas fa-ban"></i> Cảnh báo!</h5>
+            Bạn có chắc chắn muốn xóa danh mục <strong>@Model.Name</strong> không?
+            <br /><em>Lưu ý: Nếu xóa danh mục này, các sản phẩm thuộc danh mục này có thể bị ảnh hưởng.</em>
+        </div>
+
+        <div class="card shadow">
+            <div class="card-body">
+                <table class="table table-bordered">
+                    <tr><th style="width: 200px;">ID:</th><td>@Model.Id</td></tr>
+                    <tr><th>Tên danh mục:</th><td class="text-primary fw-bold">@Model.Name</td></tr>
+                    <tr><th>Mô tả:</th><td>@Model.Description</td></tr>
+                </table>
+            </div>
+            <div class="card-footer">
+                <form asp-action="Delete" method="post">
+                    <input type="hidden" asp-for="Id" />
+                    <button type="submit" class="btn btn-danger fw-bold"><i class="fas fa-trash me-1"></i> Xác nhận Xóa</button>
+                    <a asp-action="Index" class="btn btn-secondary ms-2">Hủy bỏ</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>

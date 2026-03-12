@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using FurnitureStoreData.Context;
+﻿using FurnitureStoreData.Context;
 using FurnitureStoreData.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace FurnitureStoreWeb.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")] // Khóa bảo mật URL
     public class CategoriesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -22,79 +17,76 @@ namespace FurnitureStoreWeb.Areas.Admin.Controllers
             _context = context;
         }
 
-        // GET: Admin/Categories
-        public async Task<IActionResult> Index()
+        // 1. GET: Admin/Categories (Danh sách có Tìm kiếm & Phân trang)
+        public async Task<IActionResult> Index(string searchString, int page = 1)
         {
-            return View(await _context.Categories.ToListAsync());
-        }
+            int pageSize = 5;
+            var query = _context.Categories.AsQueryable();
 
-        // GET: Admin/Categories/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
+            // Logic tìm kiếm
+            if (!string.IsNullOrEmpty(searchString))
             {
-                return NotFound();
+                query = query.Where(c => c.Name.Contains(searchString));
             }
 
-            var category = await _context.Categories
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (category == null)
-            {
-                return NotFound();
-            }
+            // Logic phân trang
+            int totalItems = await query.CountAsync();
+            int totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
 
-            return View(category);
+            var data = await query
+                .OrderByDescending(c => c.Id)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = totalPages;
+            ViewBag.SearchString = searchString;
+
+            return View(data);
         }
 
-        // GET: Admin/Categories/Create
+        // 2. GET: Admin/Categories/Create (Hiển thị Form thêm mới)
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Admin/Categories/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // 3. POST: Admin/Categories/Create (Xử lý lưu vào Database)
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description")] Category category)
+        public async Task<IActionResult> Create(Category category)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(category);
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync(); // Lưu xuống SQL
                 return RedirectToAction(nameof(Index));
             }
             return View(category);
         }
 
-        // GET: Admin/Categories/Edit/5
+        // ==========================================================
+        // 4. SỬA DANH MỤC (EDIT)
+        // ==========================================================
+
+        // GET: Hiển thị form Sửa
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var category = await _context.Categories.FindAsync(id);
-            if (category == null)
-            {
-                return NotFound();
-            }
+            if (category == null) return NotFound();
+
             return View(category);
         }
 
-        // POST: Admin/Categories/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: Xử lý lưu cập nhật
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description")] Category category)
+        public async Task<IActionResult> Edit(int id, Category category)
         {
-            if (id != category.Id)
-            {
-                return NotFound();
-            }
+            if (id != category.Id) return NotFound();
 
             if (ModelState.IsValid)
             {
@@ -105,39 +97,32 @@ namespace FurnitureStoreWeb.Areas.Admin.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CategoryExists(category.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    if (!_context.Categories.Any(e => e.Id == category.Id)) return NotFound();
+                    else throw;
                 }
                 return RedirectToAction(nameof(Index));
             }
             return View(category);
         }
 
-        // GET: Admin/Categories/Delete/5
+        // ==========================================================
+        // 5. XÓA DANH MỤC (DELETE)
+        // ==========================================================
+
+        // GET: Hiển thị trang xác nhận Xóa
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var category = await _context.Categories
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (category == null)
-            {
-                return NotFound();
-            }
+
+            if (category == null) return NotFound();
 
             return View(category);
         }
 
-        // POST: Admin/Categories/Delete/5
+        // POST: Xử lý xóa thật dưới DB
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -146,15 +131,9 @@ namespace FurnitureStoreWeb.Areas.Admin.Controllers
             if (category != null)
             {
                 _context.Categories.Remove(category);
+                await _context.SaveChangesAsync();
             }
-
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool CategoryExists(int id)
-        {
-            return _context.Categories.Any(e => e.Id == id);
         }
     }
 }
