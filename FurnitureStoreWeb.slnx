@@ -1,4 +1,4 @@
 <Solution>
-  <Project Path="../FurnitureStoreData/FurnitureStoreData.csproj" />
+  <Project Path="FurnitureStoreData/FurnitureStoreData.csproj" />
   <Project Path="FurnitureStoreWeb.csproj" />
 </Solution>
