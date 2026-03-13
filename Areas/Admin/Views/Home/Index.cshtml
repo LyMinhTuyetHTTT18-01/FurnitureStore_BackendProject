@@ -1,19 +1,116 @@
 ﻿@{
-    ViewData["Title"] = "Trang chủ Quản trị";
+    ViewData["Title"] = "Trang chủ Thống kê";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
-<div class="container-fluid pt-4">
-    <div class="row">
-        <div class="col-12">
-            <div class="card shadow">
-                <div class="card-body text-center py-5">
-                    <h1 class="text-success"><i class="fas fa-check-circle"></i></h1>
-                    <h2>Đăng nhập thành công!</h2>
-                    <p class="lead">Chào mừng Quản trị viên đã quay trở lại hệ thống.</p>
-                    <a href="/Admin/Categories" class="btn btn-primary mt-3">Đi đến Quản lý Danh mục</a>
+<div class="content-header"><div class="container-fluid"><h1 class="m-0 text-dark">Bảng Điều Khiển (Dashboard)</h1></div></div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-info shadow">
+                    <div class="inner">
+                        <h3>@ViewBag.TotalOrders</h3>
+                        <p>Tổng Đơn Hàng</p>
+                    </div>
+                    <div class="icon"><i class="fas fa-shopping-cart"></i></div>
+                    <a asp-controller="Orders" asp-action="Index" class="small-box-footer">Xem chi tiết <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-success shadow">
+                    <div class="inner">
+                        <h3>@(((decimal)ViewBag.TotalRevenue).ToString("N0"))<sup style="font-size: 20px">đ</sup></h3>
+                        <p>Doanh Thu Thực Tế</p>
+                    </div>
+                    <div class="icon"><i class="fas fa-chart-line"></i></div>
+                    <a href="#" class="small-box-footer">Đơn hàng hoàn thành</a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-warning shadow">
+                    <div class="inner">
+                        <h3 class="text-white">@ViewBag.TotalUsers</h3>
+                        <p class="text-white">Thành Viên Đăng Ký</p>
+                    </div>
+                    <div class="icon"><i class="fas fa-user-plus"></i></div>
+                    <a asp-controller="Accounts" asp-action="Index" class="small-box-footer" style="color: white !important;">Xem chi tiết <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-danger shadow">
+                    <div class="inner">
+                        <h3>@ViewBag.TotalProducts</h3>
+                        <p>Sản Phẩm Nội Thất</p>
+                    </div>
+                    <div class="icon"><i class="fas fa-couch"></i></div>
+                    <a asp-controller="Products" asp-action="Index" class="small-box-footer">Xem chi tiết <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card shadow">
+                    <div class="card-header border-0">
+                        <h3 class="card-title fw-bold text-primary"><i class="fas fa-chart-bar me-1"></i> Biểu đồ Doanh thu (6 tháng gần nhất)</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="position-relative mb-4">
+                            <canvas id="revenueChart" height="100"></canvas>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Lấy dữ liệu mảng từ C# truyền xuống biến thành mảng Javascript
+        var labels = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.ChartLabels));
+        var data = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.ChartData));
+
+        var ctx = document.getElementById('revenueChart').getContext('2d');
+        var revenueChart = new Chart(ctx, {
+            type: 'bar', // Biểu đồ dạng cột
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Doanh thu (VNĐ)',
+                    data: data,
+                    backgroundColor: 'rgba(40, 167, 69, 0.8)', // Màu xanh lá cây mướt mắt
+                    borderColor: 'rgba(40, 167, 69, 1)',
+                    borderWidth: 1,
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return value.toLocaleString('vi-VN') + ' đ'; // Thêm chữ đ vào trục Y
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.raw.toLocaleString('vi-VN') + ' VNĐ';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>

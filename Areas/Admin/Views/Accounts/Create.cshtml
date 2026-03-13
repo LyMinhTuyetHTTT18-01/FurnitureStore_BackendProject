@@ -1,0 +1,62 @@
+﻿@model FurnitureStoreData.Models.AppUser
+
+@{
+    ViewData["Title"] = "Thêm Tài khoản mới";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="content-header"><div class="container-fluid"><h1 class="m-0">Thêm Tài khoản</h1></div></div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="card card-success shadow" style="max-width: 800px; margin: auto;">
+            <div class="card-header"><h3 class="card-title">Điền thông tin</h3></div>
+            <form asp-action="Create" method="post">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 form-group mb-3">
+                            <label class="fw-bold">Tên đăng nhập <span class="text-danger">*</span></label>
+                            <input asp-for="Username" class="form-control" required />
+                            <span asp-validation-for="Username" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 form-group mb-3">
+                            <label class="fw-bold">Mật khẩu <span class="text-danger">*</span></label>
+                            <input asp-for="Password" type="password" class="form-control" required />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label class="fw-bold">Họ và Tên <span class="text-danger">*</span></label>
+                        <input asp-for="FullName" class="form-control" required />
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 form-group mb-3">
+                            <label class="fw-bold">Email</label>
+                            <input asp-for="Email" type="email" class="form-control" />
+                        </div>
+                        <div class="col-md-6 form-group mb-3">
+                            <label class="fw-bold">Số điện thoại</label>
+                            <input asp-for="Phone" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label class="fw-bold">Quyền hạn (Role)</label>
+                        <select asp-for="Role" class="form-control">
+                            <option value="Customer">Khách hàng (Customer)</option>
+                            <option value="Staff">Nhân viên (Staff)</option>
+                            <option value="Admin">Quản trị viên (Admin)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="card-footer bg-white text-end">
+                    <a asp-action="Index" class="btn btn-secondary me-2">Hủy bỏ</a>
+                    <button type="submit" class="btn btn-success fw-bold"><i class="fas fa-save me-1"></i> Lưu tài khoản</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>

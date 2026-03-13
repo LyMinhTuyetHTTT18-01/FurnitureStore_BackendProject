@@ -1,0 +1,70 @@
+﻿@model IEnumerable<FurnitureStoreData.Models.Post>
+@{
+    ViewData["Title"] = "Quản lý Bài viết";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="content-header"><div class="container-fluid"><h1 class="m-0">Danh sách Bài viết</h1></div></div>
+
+<section class="content">
+    <div class="container-fluid">
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show">
+                <i class="fas fa-check-circle"></i> @TempData["Success"]
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+            </div>
+        }
+
+        <div class="card shadow">
+            <div class="card-header border-0 pt-4">
+                <a asp-action="Create" class="btn btn-success fw-bold"><i class="fas fa-pen me-1"></i> Viết bài mới</a>
+            </div>
+            <div class="card-body table-responsive p-0">
+                <table class="table table-hover table-bordered text-center align-middle">
+                    <thead class="bg-light">
+                        <tr>
+                            <th>Hình ảnh</th>
+                            <th class="text-start">Tiêu đề</th>
+                            <th>Tác giả</th>
+                            <th>Ngày đăng</th>
+                            <th>Trạng thái</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(item.ImageUrl))
+                                    {
+                                        <img src="~/images/posts/@item.ImageUrl" style="width: 80px; height: 50px; object-fit: cover;" class="rounded shadow-sm" />
+                                    }
+                                </td>
+                                <td class="text-start fw-bold text-primary">@item.Title</td>
+                                <td><span class="badge bg-secondary">@(item.AppUser?.FullName ?? "Admin")</span></td>
+                                <td>@item.CreatedAt.ToString("dd/MM/yyyy")</td>
+                                <td>
+                                    @if (item.IsPublished)
+                                    {
+                                        <span class="badge bg-success">Đã xuất bản</span>
+                                    }
+                                    else
+                                    {
+
+                                        <span class="badge bg-warning text-dark">Bản nháp</span>
+                                    }
+                                </td>
+                                <td>
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a>
+                                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>

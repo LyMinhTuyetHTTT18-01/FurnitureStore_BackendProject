@@ -1,0 +1,32 @@
+﻿@model IEnumerable<FurnitureStoreData.Models.Product>
+@{
+    ViewData["Title"] = "Cửa hàng Nội thất";
+}
+
+<div class="container mt-5 pt-4 mb-5">
+    <h2 class="text-center fw-bold mb-4">TẤT CẢ SẢN PHẨM</h2>
+
+    <div class="row row-cols-1 row-cols-md-4 g-4 mt-3">
+        @if (!Model.Any())
+        {
+            <div class="col-12 text-center text-muted"><h4>Không tìm thấy sản phẩm nào!</h4></div>
+        }
+        @foreach (var item in Model)
+        {
+            <div class="col">
+                <div class="card h-100 border-0 shadow-sm">
+                    <a asp-controller="Shop" asp-action="Details" asp-route-id="@item.Id" class="text-decoration-none text-dark">
+                        <img src="~/images/products/@item.ImageUrl" class="card-img-top" alt="@item.Name" style="height: 250px; object-fit: cover;">
+                        <div class="card-body text-center">
+                            <h5 class="card-title fw-bold text-truncate" title="@item.Name">@item.Name</h5>
+                            <p class="card-text text-danger fw-bold">@item.Price.ToString("N0") đ</p>
+                        </div>
+                    </a>
+                    <div class="card-footer bg-white border-0 text-center pb-3">
+                        <a asp-controller="Cart" asp-action="Add" asp-route-id="@item.Id" class="btn btn-dark w-100"><i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

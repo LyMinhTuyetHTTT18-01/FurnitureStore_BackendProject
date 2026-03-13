@@ -1,25 +1,30 @@
-using System.Diagnostics;
-using FurnitureStoreWeb.Models;
+﻿using FurnitureStoreData.Context;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace FurnitureStoreWeb.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        private readonly ApplicationDbContext _context;
+
+        // Tiêm Database vào
+        public HomeController(ApplicationDbContext context)
         {
-            return View();
+            _context = context;
         }
 
-        public IActionResult Privacy()
+        public async Task<IActionResult> Index()
         {
-            return View();
-        }
+            // Lấy 8 sản phẩm mới nhất từ Database (Sắp xếp theo Id giảm dần)
+            var latestProducts = await _context.Products
+                .Include(p => p.Category) // Lấy luôn thông tin Danh mục nếu cần
+                .OrderByDescending(p => p.Id)
+                .Take(8)
+                .ToListAsync();
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            // Truyền list sản phẩm này ra View
+            return View(latestProducts);
         }
     }
 }

@@ -1,0 +1,90 @@
+﻿@model IEnumerable<FurnitureStoreData.Models.AppUser>
+
+@{
+    ViewData["Title"] = "Quản lý Tài khoản";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="content-header">
+    <div class="container-fluid"><h1 class="m-0">Danh sách Tài khoản</h1></div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show shadow-sm">
+                <i class="fas fa-check-circle"></i> @TempData["Success"]
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+            </div>
+        }
+
+        <div class="card shadow">
+            <div class="card-header border-0 pt-4">
+                <a asp-action="Create" class="btn btn-success fw-bold"><i class="fas fa-user-plus me-1"></i> Thêm tài khoản</a>
+            </div>
+            <div class="card-body table-responsive p-0">
+                <table class="table table-hover table-bordered text-center">
+                    <thead class="bg-light">
+                        <tr>
+                            <th>Mã TK</th>
+                            <th>Tài khoản</th>
+                            <th>Họ và Tên</th>
+                            <th>Email</th>
+                            <th>Quyền (Role)</th>
+                            <th>Trạng thái</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="fw-bold">TK@(item.Id.ToString("00"))</td>
+                                <td class="text-primary fw-bold">@item.Username</td>
+                                <td>@item.FullName</td>
+                                <td>@item.Email</td>
+                                <td>
+                                    @if (item.Role == "Admin")
+                                    {
+                                        <span class="badge bg-danger">Quản trị viên</span>
+                                    }
+                                    else if (item.Role == "Staff")
+                                    {
+                                        <span class="badge bg-primary">Nhân viên</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-info">Khách hàng</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.IsActive)
+                                    {
+                                        <span class="badge bg-success">Hoạt động</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">Đã khóa</span>
+                                    }
+                                </td>
+                                <td>
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning" title="Sửa"><i class="fas fa-edit"></i></a>
+
+                                    @if (item.IsActive)
+                                    {
+                                        <a asp-action="ToggleLock" asp-route-id="@item.Id" class="btn btn-sm btn-danger" title="Khóa tài khoản" onclick="return confirm('Bạn có chắc muốn KHÓA tài khoản này?');"><i class="fas fa-lock"></i></a>
+                                    }
+                                    else
+                                    {
+                                        <a asp-action="ToggleLock" asp-route-id="@item.Id" class="btn btn-sm btn-success" title="Mở khóa tài khoản"><i class="fas fa-unlock"></i></a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>

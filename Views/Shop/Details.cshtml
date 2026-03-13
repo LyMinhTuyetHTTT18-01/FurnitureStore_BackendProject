@@ -1,0 +1,75 @@
+﻿@model FurnitureStoreData.Models.Product
+
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<div class="container mt-5 pt-5 pb-5">
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card border-0 shadow-sm">
+                <img src="~/images/products/@Model.ImageUrl" alt="@Model.Name" class="card-img-top img-fluid rounded" style="object-fit: cover; max-height: 500px;" />
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb bg-transparent p-0">
+                    <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index" class="text-dark text-decoration-none">Home</a></li>
+                    <li class="breadcrumb-item"><a href="#" class="text-dark text-decoration-none">@(Model.Category?.Name ?? "Sản phẩm")</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">@Model.Name</li>
+                </ol>
+            </nav>
+
+            <h2 class="fw-bold mb-3">@Model.Name</h2>
+
+            <div class="d-flex align-items-center mb-3">
+                <div class="text-warning me-2">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i>
+                </div>
+                <span class="text-muted">(Đánh giá của khách hàng)</span>
+            </div>
+
+            <h3 class="text-danger fw-bold mb-4">@Model.Price.ToString("N0") VNĐ</h3>
+
+            <p class="text-muted mb-4" style="line-height: 1.8;">
+                @Model.Description
+            </p>
+
+            <hr />
+
+            <form asp-controller="Cart" asp-action="Add" method="post" class="mt-4">
+                <input type="hidden" name="id" value="@Model.Id" />
+
+                <div class="row g-3 align-items-center mb-4">
+                    <div class="col-auto">
+                        <label class="fw-bold">Số lượng:</label>
+                    </div>
+                    <div class="col-auto">
+                        <input type="number" name="quantity" class="form-control text-center" value="1" min="1" max="50" style="width: 80px;">
+                    </div>
+                    <div class="col-auto">
+                        <span class="text-success ms-3"><i class="fa-solid fa-check"></i> Còn hàng</span>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-3">
+                    <button type="submit" class="btn btn-dark btn-lg px-5 fw-bold rounded-0">
+                        <i class="fa-solid fa-cart-shopping me-2"></i> THÊM VÀO GIỎ
+                    </button>
+                    <a href="#" class="btn btn-outline-danger btn-lg rounded-0 px-3"><i class="fa-regular fa-heart"></i></a>
+                </div>
+            </form>
+
+            <div class="mt-4 pt-3 border-top">
+                <p class="mb-1"><strong>Danh mục:</strong> <span class="text-muted">@(Model.Category?.Name ?? "Chưa phân loại")</span></p>
+                <p class="mb-1">
+                    <strong>Chia sẻ:</strong>
+                    <a href="#" class="text-dark me-2 ms-2"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#" class="text-dark me-2"><i class="fa-brands fa-twitter"></i></a>
+                    <a href="#" class="text-dark"><i class="fa-brands fa-pinterest"></i></a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

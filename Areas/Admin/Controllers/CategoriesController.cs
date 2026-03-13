@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace FurnitureStoreWeb.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = "Admin")] // Khóa bảo mật URL
+    [Authorize(Roles = "Admin,Staff")] // Khóa bảo mật URL
     public class CategoriesController : Controller
     {
         private readonly ApplicationDbContext _context;

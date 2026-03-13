@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Http; // Dùng để nhận file ảnh (IFormFile) t�
 namespace FurnitureStoreWeb.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = "Admin")] // Bảo mật URL
+    [Authorize(Roles = "Admin,Staff")] // Bảo mật URL
     public class ProductsController : Controller
     {
         private readonly ApplicationDbContext _context;

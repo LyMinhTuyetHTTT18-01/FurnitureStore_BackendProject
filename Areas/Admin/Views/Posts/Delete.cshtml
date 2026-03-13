@@ -1,0 +1,62 @@
+﻿@model FurnitureStoreData.Models.Post
+@{
+    ViewData["Title"] = "Xóa Bài viết";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="content-header"><div class="container-fluid"><h1 class="m-0 text-danger">Xóa Bài viết</h1></div></div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="alert alert-danger shadow-sm">
+            <h5><i class="icon fas fa-exclamation-triangle"></i> Cảnh báo!</h5>
+            Bạn có chắc chắn muốn xóa bài viết <strong>"@Model.Title"</strong> không? Hành động này không thể hoàn tác và ảnh bìa cũng sẽ bị xóa khỏi máy chủ!
+        </div>
+
+        <div class="card shadow">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 text-center">
+                        @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                        {
+                            <img src="~/images/posts/@Model.ImageUrl" style="max-width: 100%; border-radius: 8px;" class="shadow-sm" />
+                        }
+                    </div>
+                    <div class="col-md-9">
+                        <table class="table table-borderless">
+                            <tr>
+                                <th style="width: 150px;">Tiêu đề:</th>
+                                <td class="text-primary fw-bold fs-5">@Model.Title</td>
+                            </tr>
+                            <tr>
+                                <th>Ngày đăng:</th>
+                                <td>@Model.CreatedAt.ToString("dd/MM/yyyy HH:mm")</td>
+                            </tr>
+                            <tr>
+                                <th>Trạng thái:</th>
+                                <td>
+                                    @if (Model.IsPublished)
+                                    {
+                                        <span class="badge bg-success">Đã xuất bản</span>
+                                    }
+                                    else
+                                    {
+
+                                        <span class="badge bg-secondary">Bản nháp</span>
+                                    }
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer bg-white">
+                <form asp-action="Delete" method="post">
+                    <input type="hidden" asp-for="Id" />
+                    <button type="submit" class="btn btn-danger fw-bold"><i class="fas fa-trash-alt me-1"></i> Xác nhận Xóa</button>
+                    <a asp-action="Index" class="btn btn-secondary ms-2">Hủy bỏ</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
