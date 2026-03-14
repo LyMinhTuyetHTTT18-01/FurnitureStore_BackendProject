@@ -9,6 +9,8 @@ namespace FurnitureStoreData.Repositories
         IRepository<Order> Order { get; }
         IRepository<OrderDetail> OrderDetail { get; }
         IRepository<AppUser> AppUser { get; }
+        IRepository<ProductReview> ProductReview { get; }
+        IRepository<Wishlist> Wishlist { get; }
 
         void Save();
         Task SaveAsync();

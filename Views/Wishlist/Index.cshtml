@@ -1,0 +1,88 @@
+@model IEnumerable<FurnitureStoreData.Models.Wishlist>
+
+@{
+    ViewData["Title"] = "Danh sách yêu thích";
+}
+
+<div class="container my-5 pt-5">
+    <div class="row mb-4">
+        <div class="col-12 text-center">
+            <h2 class="fw-bold text-uppercase" data-aos="fade-down">Danh sách yêu thích của bạn</h2>
+            <div class="bg-dark mx-auto" style="height: 3px; width: 60px;"></div>
+        </div>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="row justify-content-center mt-5" data-aos="fade-up">
+            <div class="col-md-6 text-center">
+                <div class="p-5 bg-light rounded shadow-sm">
+                    <i class="fa-regular fa-heart fa-4x text-muted mb-4"></i>
+                    <h4>Danh sách yêu thích đang trống</h4>
+                    <p class="text-muted">Hãy thêm những sản phẩm bạn yêu thích để xem lại sau nhé!</p>
+                    <a asp-controller="Shop" asp-action="Index" class="btn btn-dark mt-3 px-4">Đến Cửa Hàng</a>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row mt-4">
+            @foreach (var item in Model)
+            {
+                <div class="col-lg-3 col-md-6 mb-4" data-aos="zoom-in">
+                    <div class="card h-100 border-0 shadow-sm new-product position-relative">
+                        <button class="btn btn-danger btn-sm position-absolute top-0 end-0 m-2 rounded-circle remove-wishlist" 
+                                data-id="@item.Id" style="z-index: 10;">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                        
+                        <a asp-controller="Shop" asp-action="Details" asp-route-id="@item.Product?.Id" class="text-decoration-none text-dark">
+                            <div class="overflow-hidden">
+                                <img src="~/images/products/@item.Product?.ImageUrl" class="card-img-top w-100" alt="@item.Product?.Name" 
+                                     style="height: 250px; object-fit: cover; transition: transform 0.5s;">
+                            </div>
+                            <div class="card-body text-center mt-2">
+                                <h6 class="card-title fw-bold">@item.Product?.Name</h6>
+                                <p class="card-text text-danger fs-5">@item.Product?.Price.ToString("N0") đ</p>
+                                <p class="text-muted small">Đã thêm: @item.AddedDate.ToString("dd/MM/yyyy")</p>
+                            </div>
+                        </a>
+                        <div class="card-footer bg-white border-0 pb-3 text-center">
+                            <button class="btn btn-dark btn-sm w-100 add-to-cart" data-id="@item.Product?.Id">
+                                <i class="fa-solid fa-cart-shopping me-2"></i>Thêm vào giỏ
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        $(document).on('click', '.remove-wishlist', function() {
+            const id = $(this).data('id');
+            const card = $(this).closest('.col-lg-3');
+            
+            if (confirm('Bạn có chắc muốn xóa sản phẩm này khỏi danh sách yêu thích?')) {
+                $.ajax({
+                    url: '/Wishlist/RemoveFromWishlist',
+                    type: 'POST',
+                    data: { id: id },
+                    success: function(response) {
+                        if (response.success) {
+                            card.fadeOut(500, function() {
+                                $(this).remove();
+                                if ($('.col-lg-3').length === 0) {
+                                    location.reload();
+                                }
+                            });
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+}

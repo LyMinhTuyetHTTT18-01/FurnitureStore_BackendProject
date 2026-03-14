@@ -1,4 +1,4 @@
-﻿@model FurnitureStoreData.Models.Product
+@model FurnitureStoreData.Models.Product
 
 @{
     ViewData["Title"] = Model.Name;
@@ -7,8 +7,8 @@
 <div class="container mt-5 pt-5 pb-5">
     <div class="row">
         <div class="col-md-6 mb-4">
-            <div class="card border-0 shadow-sm">
-                <img src="~/images/products/@Model.ImageUrl" alt="@Model.Name" class="card-img-top img-fluid rounded" style="object-fit: cover; max-height: 500px;" />
+            <div class="card border-0 shadow-sm zoom-container" id="product-zoom">
+                <img src="~/images/products/@Model.ImageUrl" alt="@Model.Name" class="card-img-top img-fluid rounded zoom-img" style="object-fit: cover; max-height: 500px;" id="main-product-image" />
             </div>
         </div>
 
@@ -57,7 +57,9 @@
                     <button type="submit" class="btn btn-dark btn-lg px-5 fw-bold rounded-0">
                         <i class="fa-solid fa-cart-shopping me-2"></i> THÊM VÀO GIỎ
                     </button>
-                    <a href="#" class="btn btn-outline-danger btn-lg rounded-0 px-3"><i class="fa-regular fa-heart"></i></a>
+                    <a href="javascript:void(0)" onclick="addToWishlist(@Model.Id)" class="btn btn-outline-danger btn-lg rounded-0 px-3" title="Thêm vào yêu thích">
+                        <i class="fa-regular fa-heart"></i>
+                    </a>
                 </div>
             </form>
 
@@ -72,4 +74,159 @@
             </div>
         </div>
     </div>
+    <div class="row mt-5 pt-4">
+        <div class="col-12">
+            <h4 class="fw-bold mb-4 border-bottom pb-2">ĐÁNH GIÁ SẢN PHẨM</h4>
+            
+            <div class="reviews-list mb-5">
+                @if (ViewBag.Reviews != null && ((List<FurnitureStoreData.Models.ProductReview>)ViewBag.Reviews).Count > 0)
+                {
+                    foreach (var review in (List<FurnitureStoreData.Models.ProductReview>)ViewBag.Reviews)
+                    {
+                        <div class="review-item mb-4 pb-3 border-bottom">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <div class="fw-bold">@review.AppUser?.FullName</div>
+                                <div class="text-muted small">@review.CreatedDate.ToString("dd/MM/yyyy HH:mm")</div>
+                            </div>
+                            <div class="text-warning mb-2">
+                                @for (int i = 1; i <= 5; i++)
+                                {
+                                    <i class="fa-@(i <= review.Rating ? "solid" : "regular") fa-star"></i>
+                                }
+                            </div>
+                            <div class="review-comment">@review.Comment</div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p class="text-muted fst-italic">Chưa có đánh giá nào cho sản phẩm này.</p>
+                }
+            </div>
+
+            @if (User.Identity.IsAuthenticated)
+            {
+                <div class="review-form bg-light p-4 rounded shadow-sm">
+                    <h5 class="fw-bold mb-3">Gửi đánh giá của bạn</h5>
+                    <form id="reviewForm">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="productId" value="@Model.Id" />
+                        <div class="mb-3">
+                            <label class="form-label">Đánh giá (sao):</label>
+                            <div class="star-rating fs-4 text-warning" id="rating-stars">
+                                <i class="fa-solid fa-star star-btn" data-value="1" style="cursor: pointer;"></i>
+                                <i class="fa-solid fa-star star-btn" data-value="2" style="cursor: pointer;"></i>
+                                <i class="fa-solid fa-star star-btn" data-value="3" style="cursor: pointer;"></i>
+                                <i class="fa-solid fa-star star-btn" data-value="4" style="cursor: pointer;"></i>
+                                <i class="fa-solid fa-star star-btn" data-value="5" style="cursor: pointer;"></i>
+                                <input type="hidden" name="rating" id="selected-rating" value="5" />
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Nhận xét của bạn:</label>
+                            <textarea name="comment" class="form-control text-dark" rows="3" placeholder="Nhập cảm nhận về sản phẩm..." required id="review-comment"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-dark px-4">Đăng đánh giá</button>
+                    </form>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info">
+                    Mời bạn <a asp-controller="Account" asp-action="Login" class="fw-bold text-decoration-none">Đăng nhập</a> để để lại đánh giá.
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Related Products -->
+    @if (ViewBag.RelatedProducts != null && ((List<FurnitureStoreData.Models.Product>)ViewBag.RelatedProducts).Any())
+    {
+        <div class="row mt-5">
+            <div class="col-12">
+                <hr />
+                <h4 class="fw-bold mb-4">SẢN PHẨM LIÊN QUAN</h4>
+            </div>
+            @foreach (var related in (List<FurnitureStoreData.Models.Product>)ViewBag.RelatedProducts)
+            {
+                <div class="col-md-3 mb-4">
+                    <div class="card h-100 border-0 shadow-sm new-product">
+                        <a asp-controller="Shop" asp-action="Details" asp-route-id="@related.Id" class="text-decoration-none text-dark">
+                            <img src="~/images/products/@related.ImageUrl" class="card-img-top" alt="@related.Name" style="height: 200px; object-fit: cover;">
+                            <div class="card-body text-center">
+                                <h6 class="card-title fw-bold text-truncate">@related.Name</h6>
+                                <p class="card-text text-danger">@related.Price.ToString("N0") đ</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            }
+        </div>
+    }
 </div>
+
+@section Scripts {
+    <script>
+        // Zoom Effect
+        const container = document.getElementById('product-zoom');
+        const img = document.getElementById('main-product-image');
+
+        if (container && img) {
+            container.addEventListener('mousemove', (e) => {
+                const rect = container.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                const xPercent = (x / container.offsetWidth) * 100;
+                const yPercent = (y / container.offsetHeight) * 100;
+
+                img.style.transformOrigin = `${xPercent}% ${yPercent}%`;
+            });
+
+            container.addEventListener('mouseleave', () => {
+                img.style.transformOrigin = 'center';
+            });
+        }
+
+        // Star Rating Logic
+        $(document).on('click', '.star-btn', function() {
+            const val = $(this).data('value');
+            $('#selected-rating').val(val);
+            
+            $('.star-btn').each(function() {
+                if ($(this).data('value') <= val) {
+                    $(this).removeClass('fa-regular').addClass('fa-solid');
+                } else {
+                    $(this).removeClass('fa-solid').addClass('fa-regular');
+                }
+            });
+        });
+
+        // AJAX Review Submission
+        $(document).on('submit', '#reviewForm', function(e) {
+            e.preventDefault();
+            const formData = $(this).serialize();
+            const token = $('input[name="__RequestVerificationToken"]').val();
+            
+            $.ajax({
+                url: '/Shop/PostReview',
+                type: 'POST',
+                data: formData,
+                headers: {
+                    "RequestVerificationToken": token
+                },
+                success: function(response) {
+                    if (response.success) {
+                        alert(response.message);
+                        location.reload();
+                    } else {
+                        alert(response.message);
+                    }
+                },
+                error: function() {
+                    alert('Đã xảy ra lỗi khi gửi đánh giá.');
+                }
+            });
+        });
+    </script>
+}

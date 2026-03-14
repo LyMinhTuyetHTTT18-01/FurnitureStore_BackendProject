@@ -1,0 +1,59 @@
+@model IEnumerable<FurnitureStoreData.Models.ProductReview>
+
+@{
+    ViewData["Title"] = "Quản lý Đánh giá";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="content-header">
+    <div class="container-fluid">
+        <h1 class="m-0 text-dark">Quản lý Đánh giá sản phẩm</h1>
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="card shadow">
+            <div class="card-body">
+                <table class="table table-bordered table-striped">
+                    <thead class="bg-dark text-white">
+                        <tr>
+                            <th>Sản phẩm</th>
+                            <th>Người dùng</th>
+                            <th>Đánh giá</th>
+                            <th>Bình luận</th>
+                            <th>Ngày gửi</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.Product?.Name</td>
+                                <td>@item.AppUser?.FullName</td>
+                                <td>
+                                    <span class="text-warning">
+                                        @for (int i = 1; i <= 5; i++)
+                                        {
+                                            <i class="fa-@(i <= item.Rating ? "solid" : "regular") fa-star"></i>
+                                        }
+                                    </span>
+                                </td>
+                                <td>@item.Comment</td>
+                                <td>@item.CreatedDate.ToString("dd/MM/yyyy HH:mm")</td>
+                                <td>
+                                    <form asp-action="Delete" asp-route-id="@item.Id" method="post" onsubmit="return confirm('Bạn có chắc muốn xóa đánh giá này?')">
+                                        <button type="submit" class="btn btn-danger btn-sm">
+                                            <i class="fas fa-trash"></i> Xóa
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>

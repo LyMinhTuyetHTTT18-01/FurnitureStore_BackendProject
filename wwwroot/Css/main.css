@@ -11,6 +11,41 @@ html {
 :root {
     --color-text: #585858;
     --Hover-icon: #FF9B42;
+    --bg-body: #ffffff;
+    --bg-header: #ffffff;
+    --color-nav: #212529;
+    --bg-section: whitesmoke;
+    --card-bg: #ffffff;
+    --footer-bg: #f8f9fa;
+}
+
+[data-theme="dark"] {
+    --color-text: #e0e0e0;
+    --Hover-icon: #FFB370;
+    --bg-body: #121212;
+    --bg-header: #1e1e1e;
+    --color-nav: #ffffff;
+    --bg-section: #1a1a1a;
+    --card-bg: #2d2d2d;
+    --footer-bg: #181818;
+}
+
+body {
+    background-color: var(--bg-body) !important;
+    color: var(--color-text) !important;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+[data-theme="dark"] .title-Living-room, 
+[data-theme="dark"] .title-bed-room, 
+[data-theme="dark"] .title-kitchen-room,
+[data-theme="dark"] .title-shop,
+[data-theme="dark"] .title-product {
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .Shop-col {
+    color: #cccccc !important;
 }
 
 /* Phần hearder  */
@@ -18,7 +53,7 @@ html {
     width: 100%;
     /* height: 30.594px; */
     padding: 20px 0;
-    /* background-color: aqua; */
+    background-color: var(--bg-header);
     /* position: relative; */
     /* position: fixed;
     z-index: 1; */
@@ -54,34 +89,18 @@ html {
     transition: 0.4s;
 }
 
+.box-menu .all-list-menu li a:hover {
+    color: var(--Hover-icon);
+}
+
 .box-menu .all-list-menu li a {
+    color: var(--color-nav);
     text-decoration: none;
     font-size: 16px;
-    color: var(--color-text);
     font-weight: 500;
     padding: 0 0 5px 0;
     transition: 0.4s;
     position: relative;
-}
-
-/* Hiệu ứng hover menu */
-.box-menu .all-list-menu li .hover-a::after {
-    position: absolute;
-    content: "";
-    width: 0px;
-    height: 3px;
-    background-color: var(--Hover-icon);
-    left: 0;
-    bottom: 0;
-    transition: all 0.4s ease-in-out;
-}
-
-.box-menu .all-list-menu li .hover-a:hover::after {
-    width: 100%;
-}
-
-.box-menu .all-list-menu li a:hover {
-    color: var(--Hover-icon);
 }
 
 .box-menu .all-list-menu li:hover .angle-down {
@@ -141,7 +160,7 @@ html {
     transition: 1s;
 }
 
-.search:hover, .user:hover, .heart:hover, .cart:hover {
+.search:hover, .user:hover, .heart:hover, .cart:hover, #theme-toggle:hover {
     color: var(--Hover-icon);
     transform: translateY(-6px);
 }
@@ -375,7 +394,7 @@ html {
     min-height: 537.188px;
     padding: 100px 15px;
     /* background-color: #FF9B42; */
-    background-color: whitesmoke;
+    background-color: var(--bg-section);
     margin-bottom: 80px;
 }
 
@@ -430,7 +449,7 @@ html {
 
 .box-product a {
     text-decoration: none;
-    color: black;
+    color: var(--color-text);
 }
 
 .box-product .title-product {
@@ -770,7 +789,7 @@ html {
     width: 100%;
     height: 95px;
     font-size: 50px;
-    color: white;
+    color: white; /* Giữ nguyên vì nền bg tối sẵn */
 }
 
 .box-first-content {
@@ -1064,5 +1083,95 @@ html {
 .second-box .box-bank {
     display: flex;
     justify-content: flex-end;
+}
+
+/* Hiển thị các nút thao tác khi hover vào card sản phẩm ở trang Shop */
+.new-product:hover .qv-box {
+    display: flex !important;
+}
+
+.qv-box .btn:hover {
+    background-color: #333 !important;
+    color: #fff !important;
+}
+
+/* --- Infinite Marquee System --- */
+.marquee-container {
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    padding: 20px 0;
+    background: transparent;
+}
+
+.marquee-content {
+    display: flex;
+    white-space: nowrap;
+    width: fit-content;
+    animation: marquee-scroll 40s linear infinite;
+}
+
+.marquee-container:hover .marquee-content {
+    animation-play-state: paused;
+}
+
+@keyframes marquee-scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+/* Fast marquee for Sale section */
+.marquee-content-fast {
+    animation-duration: 25s;
+}
+
+/* Items styling within marquee */
+.marquee-item {
+    flex-shrink: 0;
+    margin-right: 30px;
+    display: inline-block;
+}
+
+.partner-logo {
+    height: 60px;
+    filter: grayscale(100%);
+    opacity: 0.6;
+    transition: all 0.3s ease;
+}
+
+.partner-logo:hover {
+    filter: grayscale(0%);
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.testimonial-card {
+    width: 350px;
+    background: #fff;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    white-space: normal;
+    transition: all 0.3s ease;
+}
+
+.testimonial-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.sale-banner {
+    background: linear-gradient(90deg, #ff416c, #ff4b2b);
+    color: #fff;
+    padding: 15px 0;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 1.2rem;
+    letter-spacing: 2px;
+}
+
+[data-theme="dark"] .testimonial-card {
+    background: #2d2d2d;
+    color: #e0e0e0;
 }
 

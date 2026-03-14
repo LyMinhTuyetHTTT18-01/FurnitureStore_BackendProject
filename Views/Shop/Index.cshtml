@@ -17,7 +17,20 @@
                 <div class="card h-100 border-0 shadow-sm new-product">
                     <a asp-controller="Shop" asp-action="Details" asp-route-id="@item.Id" class="text-decoration-none text-dark">
                         <img src="~/images/products/@item.ImageUrl" class="card-img-top" alt="@item.Name" style="height: 250px; object-fit: cover;">
-                        <div class="card-body text-center">
+                        <div class="card-body text-center position-relative">
+                            <!-- Action Buttons Overlay -->
+                            <div class="position-absolute top-0 start-50 translate-middle-x mt-n3 d-flex gap-2 qv-box" style="display: none !important;">
+                                <button class="btn btn-sm btn-light shadow-sm rounded-circle qv-btn" 
+                                        style="width: 40px; height: 40px;" 
+                                        onclick="event.preventDefault(); openQuickView(@item.Id)" title="Xem nhanh">
+                                    <i class="fa-solid fa-eye"></i>
+                                </button>
+                                <button class="btn btn-sm btn-light shadow-sm rounded-circle wl-btn" 
+                                        style="width: 40px; height: 40px;" 
+                                        onclick="event.preventDefault(); addToWishlist(@item.Id)" title="Thêm vào yêu thích">
+                                    <i class="fa-regular fa-heart"></i>
+                                </button>
+                            </div>
                             <h5 class="card-title fw-bold text-truncate" title="@item.Name">@item.Name</h5>
                             <p class="card-text text-danger fw-bold">@item.Price.ToString("N0") đ</p>
                         </div>

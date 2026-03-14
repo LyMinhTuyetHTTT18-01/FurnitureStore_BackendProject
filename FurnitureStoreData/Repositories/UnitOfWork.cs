@@ -12,6 +12,8 @@ namespace FurnitureStoreData.Repositories
         public IRepository<Order> Order { get; private set; }
         public IRepository<OrderDetail> OrderDetail { get; private set; }
         public IRepository<AppUser> AppUser { get; private set; }
+        public IRepository<ProductReview> ProductReview { get; private set; }
+        public IRepository<Wishlist> Wishlist { get; private set; }
 
         public UnitOfWork(ApplicationDbContext db)
         {
@@ -21,6 +23,8 @@ namespace FurnitureStoreData.Repositories
             Order = new Repository<Order>(_db);
             OrderDetail = new Repository<OrderDetail>(_db);
             AppUser = new Repository<AppUser>(_db);
+            ProductReview = new Repository<ProductReview>(_db);
+            Wishlist = new Repository<Wishlist>(_db);
         }
 
         public void Save()

@@ -24,7 +24,18 @@
         </ul>
     </div>
 </div>
-<div class="box-room" data-aos="fade-up">
+
+<!-- Flash Sale Marquee -->
+<div class="sale-banner marquee-container">
+    <div class="marquee-content marquee-content-fast">
+        @for(int i=0; i<10; i++) {
+            <div class="marquee-item">⚡ FLASH SALE 50% OFF - LIMITED TIME ONLY ⚡</div>
+            <div class="marquee-item">🔥 SPECIAL DISCOUNT ON SOFAS & TABLES 🔥</div>
+        }
+    </div>
+</div>
+
+<div class="box-room mt-5" data-aos="fade-up">
     <a href="">
         <div class="living-room">
             <img src="Picture/Living-room.jpg" alt="">
@@ -47,10 +58,11 @@
         </div>
     </a>
 </div>
+
 <div class="box-product-sell" data-aos="fade-up">
     <div class="box-product-sell-2">
         <div class="in-title">
-            <div class="word">Sản phẩm mới nhất</div>
+            <div class="word">Sản phẩm nổi bật</div>
             <div class="see-deals">
                 <a asp-controller="Shop" asp-action="Index">
                     Xem tất cả <i class="fa-solid fa-arrow-right"></i>
@@ -58,56 +70,94 @@
             </div>
         </div>
 
-        <div class="all-new-product">
-            @foreach (var item in Model)
-            {
-                <div class="new-product" data-aos="zoom-in">
-                    <div class="all-product">
-                        <a asp-controller="Shop" asp-action="Details" asp-route-id="@item.Id" style="text-decoration: none;">
-                            <div class="new-img-product">
-                                <img src="~/images/products/@item.ImageUrl" alt="@item.Name" style="width: 100%; aspect-ratio: 1/1; object-fit: cover;">
-
-                                <div class="note-notif">
-                                    <div class="title-hot">Mới</div>
-                                </div>
-                                <div class="all-box-icon">
-                                    <i class="fa-regular fa-heart"></i>
-                                    <i class="fa-solid fa-magnifying-glass"></i>
-                                </div>
-                            </div>
-
-                            <div class="contents-new-product">
-                                <div class="star text-warning">
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                </div>
-                            </div>
-                        </a>
-
-                        <div class="box-name-product">
-                            <div class="name-product text-truncate" title="@item.Name">
-                                @item.Name
-                            </div>
-                            <div id="Prict-prod" class="price-product">
-                                <span class="text-danger fw-bold fs-5">@item.Price.ToString("N0") đ</span>
-                            </div>
-
-                            <div class="buttom-1">
-                                <a asp-controller="Cart" asp-action="Add" asp-route-id="@item.Id" class="btn border border-secondary text-dark w-100 mt-2 d-flex justify-content-center align-items-center gap-2">
-                                    <i class="fa-solid fa-cart-plus"></i>
-                                    <span>Thêm vào giỏ</span>
+        <div class="marquee-container">
+            <div class="marquee-content" style="animation-duration: 60s;">
+                @foreach (var item in Model.Concat(Model)) // Duplicate items for infinite effect
+                {
+                    <div class="marquee-item" style="width: 250px;">
+                        <div class="new-product shadow-sm">
+                            <div class="all-product">
+                                <a asp-controller="Shop" asp-action="Details" asp-route-id="@item.Id" style="text-decoration: none;">
+                                    <div class="new-img-product">
+                                        <img src="~/images/products/@item.ImageUrl" alt="@item.Name" style="width: 100%; aspect-ratio: 1/1; object-fit: cover;">
+                                        <div class="all-box-icon">
+                                            <i class="fa-regular fa-heart" style="cursor: pointer;" onclick="event.preventDefault(); addToWishlist(@item.Id)"></i>
+                                            <i class="fa-solid fa-magnifying-glass" style="cursor: pointer;" onclick="event.preventDefault(); openQuickView(@item.Id)"></i>
+                                        </div>
+                                    </div>
+                                    <div class="p-3 text-center">
+                                        <h6 class="fw-bold text-dark text-truncate">@item.Name</h6>
+                                        <span class="text-danger fw-bold">@item.Price.ToString("N0") đ</span>
+                                    </div>
                                 </a>
                             </div>
                         </div>
                     </div>
-                </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Testimonials Section -->
+<div class="container-fluid bg-light py-5 mt-5">
+    <div class="container">
+        <h2 class="text-center fw-bold mb-5" data-aos="fade-up">KHÁCH HÀNG NÓI GÌ</h2>
+        <div class="marquee-container">
+            <div class="marquee-content" style="animation-direction: reverse;">
+                @for(int j=0; j<2; j++) {
+                    <div class="marquee-item">
+                        <div class="testimonial-card">
+                            <div class="text-warning mb-2">
+                                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                            </div>
+                            <p class="text-muted italic">"Sản phẩm chất lượng tuyệt vời, nhân viên tư vấn nhiệt tình. Tôi rất hài lòng với chiếc sofa mới mua tại Funori."</p>
+                            <div class="d-flex align-items-center mt-3">
+                                <div class="bg-dark text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">MT</div>
+                                <div class="ms-3">
+                                    <div class="fw-bold">Minh Tuyết</div>
+                                    <div class="small text-muted">Kiến trúc sư</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="marquee-item">
+                        <div class="testimonial-card">
+                            <div class="text-warning mb-2">
+                                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i>
+                            </div>
+                            <p class="text-muted italic">"Giao hàng nhanh, đóng gói cẩn thận. Bàn ăn gỗ sồi rất đẹp và chắc chắn, phù hợp với không gian nhà tôi."</p>
+                            <div class="d-flex align-items-center mt-3">
+                                <div class="bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">AH</div>
+                                <div class="ms-3">
+                                    <div class="fw-bold">Anh Hoàng</div>
+                                    <div class="small text-muted">Khách hàng thân thiết</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Partners Section -->
+<div class="container py-5">
+    <h4 class="text-center text-muted mb-4" data-aos="fade-up">ĐỐI TÁC TIN CẬY</h4>
+    <div class="marquee-container">
+        <div class="marquee-content">
+            @for(int k=0; k<3; k++) {
+                <div class="marquee-item"><h3 class="fw-bold opacity-25">HERMES</h3></div>
+                <div class="marquee-item"><h3 class="fw-bold opacity-25">GUCCI</h3></div>
+                <div class="marquee-item"><h3 class="fw-bold opacity-25">IKEA</h3></div>
+                <div class="marquee-item"><h3 class="fw-bold opacity-25">DIOR</h3></div>
+                <div class="marquee-item"><h3 class="fw-bold opacity-25">ZARA HOME</h3></div>
             }
         </div>
     </div>
 </div>
+
 <div class="setion-shop" data-aos="fade-up">
     <div class="box-title">
         <div class="title-shop">Shop by categories</div>
