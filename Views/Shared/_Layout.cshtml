@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -42,6 +42,9 @@
 
                 @if (User.Identity != null && User.Identity.IsAuthenticated)
                 {
+                    <a asp-controller="Order" asp-action="Index" class="text-dark me-2" title="Đơn hàng của tôi">
+                        <i class="fa-solid fa-receipt"></i>
+                    </a>
                     <a asp-controller="Account" asp-action="Logout" class="text-danger" title="Đăng xuất khỏi tài khoản @User.Identity.Name">
                         <i class="fa-solid fa-sign-out-alt"></i>
                     </a>
@@ -55,9 +58,23 @@
 
                 <a href="#" class="text-dark"><i class="fa-regular fa-heart"></i></a>
 
-                <a href="#" class="text-dark position-relative" title="Giỏ hàng">
+                @{
+                    var cartJson = Context.Session.GetString("CartSession");
+                    var cartCount = 0;
+                    if (!string.IsNullOrEmpty(cartJson))
+                    {
+                        var cartItems = System.Text.Json.JsonSerializer.Deserialize<List<FurnitureStoreWeb.Models.ViewModels.CartItem>>(cartJson);
+                        cartCount = cartItems?.Sum(i => i.Quantity) ?? 0;
+                    }
+                }
+                <a asp-controller="Cart" asp-action="Index" class="text-dark position-relative" title="Giỏ hàng">
                     <i class="fa-solid fa-cart-shopping"></i>
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">0</span>
+                    @if (cartCount > 0)
+                    {
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">
+                            @cartCount
+                        </span>
+                    }
                 </a>
             </div>
         </div>
@@ -65,6 +82,24 @@
 
     <div class="container-fluid p-0">
         <main role="main">
+            @if (TempData["Success"] != null)
+            {
+                <div class="container mt-3">
+                    <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm" role="alert">
+                        <i class="fa-solid fa-circle-check me-2"></i> @TempData["Success"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </div>
+            }
+            @if (TempData["Error"] != null)
+            {
+                <div class="container mt-3">
+                    <div class="alert alert-danger alert-dismissible fade show border-0 shadow-sm" role="alert">
+                        <i class="fa-solid fa-circle-exclamation me-2"></i> @TempData["Error"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </div>
+            }
             @RenderBody()
         </main>
     </div>

@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -21,7 +21,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FurnitureStoreData\FurnitureStoreData.csproj" />
+    <ProjectReference Include="FurnitureStoreData\FurnitureStoreData.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Loại trừ FurnitureStoreData khỏi glob compile của FurnitureStoreWeb vì nó là subfolder -->
+    <Compile Remove="FurnitureStoreData\**" />
+    <Content Remove="FurnitureStoreData\**" />
+    <EmbeddedResource Remove="FurnitureStoreData\**" />
+    <None Remove="FurnitureStoreData\**" />
   </ItemGroup>
 
   <ItemGroup>

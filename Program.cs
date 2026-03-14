@@ -1,4 +1,5 @@
-﻿using FurnitureStoreData.Context;
+using System; // Mới thêm để dùng Console
+using FurnitureStoreData.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.Cookies; // Thư viện dùng cho Cookie Auth
 

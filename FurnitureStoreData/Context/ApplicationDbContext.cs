@@ -1,4 +1,4 @@
-﻿using FurnitureStoreData.Models;
+using FurnitureStoreData.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace FurnitureStoreData.Context
@@ -13,7 +13,7 @@ namespace FurnitureStoreData.Context
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=.;Database=FurnitureStoreDB;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True");
+                optionsBuilder.UseSqlServer("Server=127.0.0.1,1434;Database=FurnitureStoreDB;Trusted_Connection=True;MultipleActiveResultSets=true;Encrypt=False;TrustServerCertificate=True");
             }
         }
 

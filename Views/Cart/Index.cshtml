@@ -1,0 +1,112 @@
+@model IEnumerable<FurnitureStoreWeb.Models.ViewModels.CartItem>
+@{
+    ViewData["Title"] = "Giỏ hàng của bạn";
+    Layout = "_Layout";
+}
+
+<div class="container mt-5 pt-4 mb-5">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index" class="text-dark text-decoration-none">Trang chủ</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Giỏ hàng</li>
+        </ol>
+    </nav>
+
+    <h2 class="fw-bold mb-4">GIỎ HÀNG CỦA BẠN</h2>
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="bg-light">
+                                    <tr>
+                                        <th class="ps-4 py-3">Sản phẩm</th>
+                                        <th class="py-3">Giá</th>
+                                        <th class="py-3">Số lượng</th>
+                                        <th class="py-3">Thành tiền</th>
+                                        <th class="py-3"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td class="ps-4">
+                                                <div class="d-flex align-items-center">
+                                                    <img src="~/images/products/@item.ImageUrl" alt="@item.ProductName" class="rounded" style="width: 70px; height: 70px; object-fit: cover;">
+                                                    <div class="ms-3">
+                                                        <h6 class="mb-0 fw-bold">@item.ProductName</h6>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="fw-bold">@item.Price.ToString("N0") đ</td>
+                                            <td>
+                                                <form asp-action="UpdateQuantity" method="post" class="d-flex align-items-center" style="max-width: 120px;">
+                                                    <input type="hidden" name="productId" value="@item.ProductId" />
+                                                    <input type="number" name="quantity" value="@item.Quantity" class="form-control form-control-sm text-center" onchange="this.form.submit()" min="1" max="100" />
+                                                </form>
+                                            </td>
+                                            <td class="text-danger fw-bold">@item.Total.ToString("N0") đ</td>
+                                            <td class="pe-4 text-end">
+                                                <a asp-action="Remove" asp-route-id="@item.ProductId" class="text-muted" title="Xóa sản phẩm">
+                                                    <i class="fa-solid fa-trash-can"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="d-flex justify-content-between">
+                    <a asp-controller="Shop" asp-action="Index" class="btn btn-outline-dark">
+                        <i class="fa-solid fa-arrow-left me-2"></i> Tiếp tục mua sắm
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-dark text-white py-3">
+                        <h5 class="mb-0 fw-bold">TÓM TẮT ĐƠN HÀNG</h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between mb-3">
+                            <span>Tạm tính</span>
+                            <span class="fw-bold">@ViewBag.Total.ToString("N0") đ</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-3">
+                            <span>Phí vận chuyển</span>
+                            <span class="text-success fw-bold">Miễn phí</span>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between mb-4">
+                            <span class="fs-5 fw-bold">TỔNG CỘNG</span>
+                            <span class="fs-5 fw-bold text-danger">@ViewBag.Total.ToString("N0") đ</span>
+                        </div>
+                        <div class="d-grid">
+                            <a asp-action="Checkout" class="btn btn-warning btn-lg fw-bold text-dark">
+                                TIẾN HÀNH THANH TOÁN
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="text-center py-5">
+            <i class="fa-solid fa-cart-shopping fa-5x text-light mb-4"></i>
+            <h3>Giỏ hàng của bạn đang trống!</h3>
+            <p class="text-muted">Hãy quay lại cửa hàng để chọn cho mình những sản phẩm nội thất ưng ý nhất.</p>
+            <a asp-controller="Shop" asp-action="Index" class="btn btn-dark btn-lg mt-3 px-5">MUA SẮM NGAY</a>
+        </div>
+    }
+</div>

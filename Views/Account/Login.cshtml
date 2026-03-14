@@ -1,4 +1,4 @@
-﻿@{
+@{
     ViewData["Title"] = "Đăng nhập hệ thống";
     Layout = "_Layout";
 }
@@ -15,6 +15,13 @@
                     {
                         <div class="alert alert-danger text-center">
                             @ViewBag.Error
+                        </div>
+                    }
+
+                    @if (TempData["Success"] != null)
+                    {
+                        <div class="alert alert-success text-center">
+                            @TempData["Success"]
                         </div>
                     }
 
@@ -37,6 +44,11 @@
                             <button type="submit" class="btn btn-warning btn-lg fw-bold text-dark">
                                 ĐĂNG NHẬP
                             </button>
+                        </div>
+
+                        <div class="mt-3 text-center">
+                            <span>Chưa có tài khoản? </span>
+                            <a asp-controller="Account" asp-action="Register" class="text-decoration-none fw-bold text-dark">Đăng ký ngay</a>
                         </div>
                     </form>
                 </div>

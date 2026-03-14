@@ -1,11 +1,12 @@
-﻿using FurnitureStoreData.Context;
+using FurnitureStoreData.Context;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using System.Security.Cryptography; // MỚI THÊM: Để dùng thư viện băm SHA-256
-using System.Text; // MỚI THÊM: Để xử lý chuỗi chữ
+using System.Text; 
+using FurnitureStoreWeb.Models.ViewModels; // MỚI THÊM: Để dùng ViewModel
 
 namespace FurnitureStoreWeb.Controllers
 {
@@ -109,6 +110,59 @@ namespace FurnitureStoreWeb.Controllers
         public IActionResult AccessDenied()
         {
             return View();
+        }
+
+        // ==========================================================
+        // 5. CHỨC NĂNG ĐĂNG KÝ (MỚI THÊM)
+        // ==========================================================
+        
+        [HttpGet]
+        public IActionResult Register()
+        {
+             if (User.Identity != null && User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Register(RegisterViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                // 1. Kiểm tra xem tên đăng nhập đã tồn tại chưa
+                var existingUser = await _context.AppUsers
+                    .FirstOrDefaultAsync(u => u.Username == model.Username);
+                
+                if (existingUser != null)
+                {
+                    ModelState.AddModelError("Username", "Tên đăng nhập này đã được sử dụng!");
+                    return View(model);
+                }
+
+                // 2. Tạo đối tượng User mới
+                var newUser = new FurnitureStoreData.Models.AppUser
+                {
+                    Username = model.Username,
+                    Password = ComputeSha256Hash(model.Password), // Băm mật khẩu để bảo mật
+                    FullName = model.FullName,
+                    Email = model.Email,
+                    Phone = model.Phone,
+                    Role = "Customer", // Mặc định đăng ký là khách hàng
+                    IsActive = true
+                };
+
+                // 3. Lưu vào Database
+                _context.AppUsers.Add(newUser);
+                await _context.SaveChangesAsync();
+
+                // 4. Thông báo thành công và chuyển về trang Login
+                TempData["Success"] = "Đăng ký tài khoản thành công! Mời bạn đăng nhập.";
+                return RedirectToAction("Login");
+            }
+
+            return View(model);
         }
     }
 }
