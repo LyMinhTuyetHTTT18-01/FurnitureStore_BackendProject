@@ -21,6 +21,9 @@ namespace FurnitureStoreWeb
             // Đăng ký Repository Pattern (IUnitOfWork)
             builder.Services.AddScoped<FurnitureStoreData.Repositories.IUnitOfWork, FurnitureStoreData.Repositories.UnitOfWork>();
 
+            // Đăng ký EmailService
+            builder.Services.AddTransient<FurnitureStoreWeb.Services.IEmailService, FurnitureStoreWeb.Services.EmailService>();
+
             // 1. CẤU HÌNH SESSION 
             builder.Services.AddSession(options => {
                 options.IdleTimeout = TimeSpan.FromMinutes(30); // Thời gian sống của Session

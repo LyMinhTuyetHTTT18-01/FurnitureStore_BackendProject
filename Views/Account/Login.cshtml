@@ -40,10 +40,13 @@
                             <label class="form-check-label" for="rememberMe">Ghi nhớ đăng nhập</label>
                         </div>
 
-                        <div class="d-grid">
+                        <div class="d-grid gap-2">
                             <button type="submit" class="btn btn-warning btn-lg fw-bold text-dark">
                                 ĐĂNG NHẬP
                             </button>
+                            <a asp-controller="Account" asp-action="LoginWithEmail" class="btn btn-outline-dark fw-bold">
+                                <i class="fa-solid fa-envelope me-1"></i> Đăng nhập bằng Email OTP
+                            </a>
                         </div>
 
                         <div class="mt-3 text-center">

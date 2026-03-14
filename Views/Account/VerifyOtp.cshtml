@@ -1,0 +1,58 @@
+@{
+    ViewData["Title"] = "Nhập mã OTP";
+    Layout = "_Layout";
+}
+
+<div class="container mt-5 mb-5" style="min-height: 50vh;" data-aos="zoom-in">
+    <div class="row justify-content-center">
+        <div class="col-md-5 mt-5">
+            <div class="card shadow border-0 rounded-lg">
+                <div class="card-header bg-dark text-white text-center py-3">
+                    <h4 class="mb-0"><i class="fa-solid fa-shield-halved me-2"></i> Nhập mã bảo mật</h4>
+                </div>
+                <div class="card-body p-4 text-center">
+                    @if (ViewBag.Error != null)
+                    {
+                        <div class="alert alert-danger text-center">
+                            @ViewBag.Error
+                        </div>
+                    }
+
+                    <div class="mb-4">
+                        <i class="fa-solid fa-envelope-open-text fs-1 text-warning mb-3"></i>
+                        <h5>Mã xác minh đã được gửi</h5>
+                        <p class="text-muted">Vui lòng kiểm tra hòm thư <strong>@ViewBag.Email</strong> và điền mã 6 chữ số vào ô bên dưới. Mã có hiệu lực trong vòng 5 phút.</p>
+                    </div>
+
+                    <form asp-controller="Account" asp-action="VerifyOtp" method="post">
+                        <input type="hidden" name="email" value="@ViewBag.Email" />
+                        
+                        <div class="mb-4">
+                            <input type="text" name="otpCode" class="form-control form-control-lg text-center fs-3 fw-bold tracking-widest" required placeholder="X X X X X X" maxlength="6" style="letter-spacing: 10px;" />
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-dark btn-lg fw-bold">
+                                XÁC NHẬN VÀ ĐĂNG NHẬP
+                            </button>
+                        </div>
+                    </form>
+
+                    <div class="mt-4">
+                        <span class="text-muted">Không nhận được mã?</span>
+                        <form asp-controller="Account" asp-action="SendOtp" method="post" class="d-inline">
+                            <input type="hidden" name="email" value="@ViewBag.Email" />
+                            <button type="submit" class="btn btn-link text-decoration-none fw-bold p-0 text-warning" style="vertical-align: baseline;">Gửi lại</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .tracking-widest {
+        letter-spacing: 0.5em; /* Helps the OTP look more spaced out */
+    }
+</style>

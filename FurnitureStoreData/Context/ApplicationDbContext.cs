@@ -24,6 +24,7 @@ namespace FurnitureStoreData.Context
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<AppUser> AppUsers { get; set; }
         public DbSet<Post> Posts { get; set; }
+        public DbSet<OtpVerification> OtpVerifications { get; set; }
 
         // Bổ sung hàm này để tự động tạo tài khoản Admin
         protected override void OnModelCreating(ModelBuilder modelBuilder)
