@@ -59,5 +59,13 @@
 #*.DOT   diff=astextplain
 #*.pdf   diff=astextplain
 #*.PDF   diff=astextplain
-#*.rtf   diff=astextplain
-#*.RTF   diff=astextplain
+# *.rtf   diff=astextplain
+# *.RTF   diff=astextplain
+
+###############################################################################
+# GitHub Linguist override (Hide libraries from language statistics)
+###############################################################################
+wwwroot/lib/** linguist-vendored
+wwwroot/plugins/** linguist-vendored
+wwwroot/css/** linguist-vendored
+wwwroot/js/plugins/** linguist-vendored
