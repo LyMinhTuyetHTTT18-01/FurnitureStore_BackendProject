@@ -14,12 +14,9 @@ namespace FurnitureStoreWeb.Controllers
     public class AccountController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IEmailService _emailService;
-
-        public AccountController(IUnitOfWork unitOfWork, IEmailService emailService)
+        public AccountController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-            _emailService = emailService;
         }
 
         // ==========================================================
@@ -171,126 +168,5 @@ namespace FurnitureStoreWeb.Controllers
             return View(model);
         }
 
-        // ==========================================================
-        // 6. ĐĂNG NHẬP BẰNG EMAIL (OTP)
-        // ==========================================================
-        [HttpGet]
-        public IActionResult LoginWithEmail()
-        {
-            if (User.Identity != null && User.Identity.IsAuthenticated)
-                return RedirectToAction("Index", "Home");
-
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> SendOtp(string email)
-        {
-            if (string.IsNullOrEmpty(email))
-            {
-                ViewBag.Error = "Vui lòng nhập Email!";
-                return View("LoginWithEmail");
-            }
-
-            var user = _unitOfWork.AppUser.GetFirstOrDefault(u => u.Email == email && u.IsActive);
-            if (user == null)
-            {
-                ViewBag.Error = "Email chưa được gắn với tài khoản nào hoặc tài khoản bị khóa!";
-                return View("LoginWithEmail");
-            }
-
-            // Sinh mã OTP 6 số
-            string otpCode = new Random().Next(100000, 999999).ToString();
-            
-            // Lưu vào DB
-            var otpEntity = new OtpVerification
-            {
-                Email = email,
-                OtpCode = otpCode,
-                CreatedAt = DateTime.Now,
-                ExpirationTime = DateTime.Now.AddMinutes(5), // Hết hạn sau 5 phút
-                IsUsed = false
-            };
-
-            _unitOfWork.OtpVerification.Add(otpEntity);
-            await _unitOfWork.SaveAsync();
-
-            try
-            {
-                // Gửi qua Email (SMTP)
-                string subject = "Mã xác thực đăng nhập - FurnitureStore";
-                string htmlMessage = $"<h2>Mã xác thực đăng nhập của bạn là: <strong>{otpCode}</strong></h2>" +
-                                     $"<p>Mã này sẽ hết hạn sau 5 phút. Vui lòng không chia sẻ mã này cho bất kỳ ai.</p>";
-
-                await _emailService.SendEmailAsync(email, subject, htmlMessage);
-                
-                TempData["OTPEmail"] = email;
-                return RedirectToAction("VerifyOtp");
-            }
-            catch (Exception ex)
-            {
-                // Xử lý lỗi cẩn thận kẻo crash app
-                ViewBag.Error = "Có lỗi xảy ra khi gửi Email. Vui lòng kiểm tra lại cấu hình SMTP.";
-                return View("LoginWithEmail");
-            }
-        }
-
-        [HttpGet]
-        public IActionResult VerifyOtp()
-        {
-            if (TempData["OTPEmail"] == null)
-            {
-                return RedirectToAction("LoginWithEmail");
-            }
-            
-            ViewBag.Email = TempData["OTPEmail"].ToString();
-            TempData.Keep("OTPEmail"); // Giữ lại giá trị để dùng khi Post
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> VerifyOtp(string email, string otpCode)
-        {
-            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(otpCode))
-            {
-                ViewBag.Error = "Vui lòng nhập đầy đủ thông tin!";
-                ViewBag.Email = email;
-                return View();
-            }
-
-            // Tìm OTP chưa sử dụng, đúng mã, đúng email và chưa hết hạn
-            var otpRecord = _unitOfWork.OtpVerification.GetFirstOrDefault(
-                o => o.Email == email 
-                  && o.OtpCode == otpCode 
-                  && o.IsUsed == false
-                  && o.ExpirationTime > DateTime.Now);
-
-            if (otpRecord != null)
-            {
-                // Đánh dấu đã dùng
-                otpRecord.IsUsed = true;
-                _unitOfWork.OtpVerification.Update(otpRecord);
-                await _unitOfWork.SaveAsync();
-
-                // SignIn
-                var user = _unitOfWork.AppUser.GetFirstOrDefault(u => u.Email == email);
-                if (user != null)
-                {
-                    await SignInUser(user, rememberMe: true);
-                    TempData["Success"] = "Đăng nhập thành công bằng mã OTP!";
-                    
-                    if (user.Role == "Admin" || user.Role == "Staff")
-                    {
-                        return RedirectToAction("Index", "Home", new { area = "Admin" });
-                    }
-                    return RedirectToAction("Index", "Home");
-                }
-            }
-
-            ViewBag.Error = "Mã xác nhận không đúng hoặc đã hết hạn!";
-            ViewBag.Email = email;
-            TempData.Keep("OTPEmail");
-            return View();
-        }
     }
 }

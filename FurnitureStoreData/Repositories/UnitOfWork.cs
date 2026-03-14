@@ -12,7 +12,6 @@ namespace FurnitureStoreData.Repositories
         public IRepository<Order> Order { get; private set; }
         public IRepository<OrderDetail> OrderDetail { get; private set; }
         public IRepository<AppUser> AppUser { get; private set; }
-        public IRepository<OtpVerification> OtpVerification { get; private set; }
 
         public UnitOfWork(ApplicationDbContext db)
         {
@@ -22,7 +21,6 @@ namespace FurnitureStoreData.Repositories
             Order = new Repository<Order>(_db);
             OrderDetail = new Repository<OrderDetail>(_db);
             AppUser = new Repository<AppUser>(_db);
-            OtpVerification = new Repository<OtpVerification>(_db);
         }
 
         public void Save()

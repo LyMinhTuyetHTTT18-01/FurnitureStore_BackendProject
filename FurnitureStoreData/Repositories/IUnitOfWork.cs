@@ -9,7 +9,6 @@ namespace FurnitureStoreData.Repositories
         IRepository<Order> Order { get; }
         IRepository<OrderDetail> OrderDetail { get; }
         IRepository<AppUser> AppUser { get; }
-        IRepository<OtpVerification> OtpVerification { get; }
 
         void Save();
         Task SaveAsync();
