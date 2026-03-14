@@ -18,6 +18,9 @@ namespace FurnitureStoreWeb
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
+            // Đăng ký Repository Pattern (IUnitOfWork)
+            builder.Services.AddScoped<FurnitureStoreData.Repositories.IUnitOfWork, FurnitureStoreData.Repositories.UnitOfWork>();
+
             // 1. CẤU HÌNH SESSION 
             builder.Services.AddSession(options => {
                 options.IdleTimeout = TimeSpan.FromMinutes(30); // Thời gian sống của Session

@@ -1,22 +1,22 @@
-using FurnitureStoreData.Context;
+using FurnitureStoreData.Models;
+using FurnitureStoreData.Repositories;
+using FurnitureStoreWeb.Models.ViewModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using System.Security.Cryptography; // MỚI THÊM: Để dùng thư viện băm SHA-256
 using System.Text; 
-using FurnitureStoreWeb.Models.ViewModels; // MỚI THÊM: Để dùng ViewModel
 
 namespace FurnitureStoreWeb.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public AccountController(ApplicationDbContext context)
+        public AccountController(IUnitOfWork unitOfWork)
         {
-            _context = context;
+            _unitOfWork = unitOfWork;
         }
 
         // ==========================================================
@@ -55,8 +55,8 @@ namespace FurnitureStoreWeb.Controllers
             string hashedPassword = ComputeSha256Hash(password);
 
             // Tìm user trong Database (So sánh bằng chuỗi đã băm)
-            var user = await _context.AppUsers
-                .FirstOrDefaultAsync(u => u.Username == username && u.Password == hashedPassword && u.IsActive);
+            var user = _unitOfWork.AppUser
+                .GetFirstOrDefault(u => u.Username == username && u.Password == hashedPassword && u.IsActive);
 
             if (user != null)
             {
@@ -66,8 +66,8 @@ namespace FurnitureStoreWeb.Controllers
                     // QUAN TRỌNG: Phải lưu ID vào đây để bài trước lấy ra chặn lỗi IDOR (2.0 điểm)
                     new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                     new Claim(ClaimTypes.Name, user.Username),
-                    new Claim(ClaimTypes.Role, user.Role), // Quyết định xem có vào được Admin không
-                    new Claim("FullName", user.FullName)
+                    new Claim(ClaimTypes.Role, user.Role ?? "Customer"), // Quyết định xem có vào được Admin không
+                    new Claim("FullName", user.FullName ?? "")
                 };
 
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -132,8 +132,7 @@ namespace FurnitureStoreWeb.Controllers
             if (ModelState.IsValid)
             {
                 // 1. Kiểm tra xem tên đăng nhập đã tồn tại chưa
-                var existingUser = await _context.AppUsers
-                    .FirstOrDefaultAsync(u => u.Username == model.Username);
+                var existingUser = _unitOfWork.AppUser.GetFirstOrDefault(u => u.Username == model.Username);
                 
                 if (existingUser != null)
                 {
@@ -154,8 +153,8 @@ namespace FurnitureStoreWeb.Controllers
                 };
 
                 // 3. Lưu vào Database
-                _context.AppUsers.Add(newUser);
-                await _context.SaveChangesAsync();
+                _unitOfWork.AppUser.Add(newUser);
+                await _unitOfWork.SaveAsync();
 
                 // 4. Thông báo thành công và chuyển về trang Login
                 TempData["Success"] = "Đăng ký tài khoản thành công! Mời bạn đăng nhập.";

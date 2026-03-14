@@ -1,8 +1,7 @@
-using FurnitureStoreData.Context;
 using FurnitureStoreData.Models;
+using FurnitureStoreData.Repositories;
 using FurnitureStoreWeb.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 using System.Security.Claims;
 
@@ -10,12 +9,12 @@ namespace FurnitureStoreWeb.Controllers
 {
     public class CartController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IUnitOfWork _unitOfWork;
         private const string CART_KEY = "CartSession";
 
-        public CartController(ApplicationDbContext context)
+        public CartController(IUnitOfWork unitOfWork)
         {
-            _context = context;
+            _unitOfWork = unitOfWork;
         }
 
         // 1. Lấy danh sách giỏ hàng từ Session
@@ -45,9 +44,9 @@ namespace FurnitureStoreWeb.Controllers
         }
 
         // GET: /Cart/Add/5
-        public async Task<IActionResult> Add(int id)
+        public IActionResult Add(int id)
         {
-            var product = await _context.Products.FindAsync(id);
+            var product = _unitOfWork.Product.GetFirstOrDefault(p => p.Id == id);
             if (product == null) return NotFound();
 
             var cart = GetCartItems();
@@ -145,8 +144,8 @@ namespace FurnitureStoreWeb.Controllers
                 }
 
                 // Lưu Order để lấy ID
-                _context.Orders.Add(order);
-                await _context.SaveChangesAsync();
+                _unitOfWork.Order.Add(order);
+                await _unitOfWork.SaveAsync();
 
                 // Lưu OrderDetails
                 foreach (var item in cart)
@@ -158,10 +157,10 @@ namespace FurnitureStoreWeb.Controllers
                         Quantity = item.Quantity,
                         UnitPrice = item.Price
                     };
-                    _context.OrderDetails.Add(detail);
+                    _unitOfWork.OrderDetail.Add(detail);
                 }
 
-                await _context.SaveChangesAsync();
+                await _unitOfWork.SaveAsync();
 
                 // Xóa giỏ hàng sau khi thanh toán
                 HttpContext.Session.Remove(CART_KEY);

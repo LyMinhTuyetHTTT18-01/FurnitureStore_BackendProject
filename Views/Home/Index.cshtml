@@ -1,4 +1,4 @@
-﻿@model IEnumerable<FurnitureStoreData.Models.Product>
+@model IEnumerable<FurnitureStoreData.Models.Product>
 @{
     ViewData["Title"] = "Trang chủ";
 }
@@ -24,7 +24,7 @@
         </ul>
     </div>
 </div>
-<div class="box-room">
+<div class="box-room" data-aos="fade-up">
     <a href="">
         <div class="living-room">
             <img src="Picture/Living-room.jpg" alt="">
@@ -47,7 +47,7 @@
         </div>
     </a>
 </div>
-<div class="box-product-sell">
+<div class="box-product-sell" data-aos="fade-up">
     <div class="box-product-sell-2">
         <div class="in-title">
             <div class="word">Sản phẩm mới nhất</div>
@@ -61,7 +61,7 @@
         <div class="all-new-product">
             @foreach (var item in Model)
             {
-                <div class="new-product">
+                <div class="new-product" data-aos="zoom-in">
                     <div class="all-product">
                         <a asp-controller="Shop" asp-action="Details" asp-route-id="@item.Id" style="text-decoration: none;">
                             <div class="new-img-product">
@@ -108,7 +108,7 @@
         </div>
     </div>
 </div>
-<div class="setion-shop">
+<div class="setion-shop" data-aos="fade-up">
     <div class="box-title">
         <div class="title-shop">Shop by categories</div>
     </div>

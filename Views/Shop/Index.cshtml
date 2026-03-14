@@ -1,4 +1,4 @@
-﻿@model IEnumerable<FurnitureStoreData.Models.Product>
+@model IEnumerable<FurnitureStoreData.Models.Product>
 @{
     ViewData["Title"] = "Cửa hàng Nội thất";
 }
@@ -13,8 +13,8 @@
         }
         @foreach (var item in Model)
         {
-            <div class="col">
-                <div class="card h-100 border-0 shadow-sm">
+            <div class="col" data-aos="fade-up" data-aos-anchor-placement="top-bottom">
+                <div class="card h-100 border-0 shadow-sm new-product">
                     <a asp-controller="Shop" asp-action="Details" asp-route-id="@item.Id" class="text-decoration-none text-dark">
                         <img src="~/images/products/@item.ImageUrl" class="card-img-top" alt="@item.Name" style="height: 250px; object-fit: cover;">
                         <div class="card-body text-center">

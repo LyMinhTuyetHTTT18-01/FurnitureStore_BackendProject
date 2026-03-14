@@ -1,22 +1,21 @@
-﻿using FurnitureStoreData.Context;
+using FurnitureStoreData.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace FurnitureStoreWeb.Controllers
 {
     public class ShopController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public ShopController(ApplicationDbContext context)
+        public ShopController(IUnitOfWork unitOfWork)
         {
-            _context = context;
+            _unitOfWork = unitOfWork;
         }
-        // GET: /Shop/Index (Bấm vào nút Shop trên menu)
-        // Nếu có truyền categoryId thì sẽ lọc sản phẩm theo danh mục đó
-        public async Task<IActionResult> Index(int? categoryId, string? searchString)
+
+        // GET: /Shop/Index
+        public IActionResult Index(int? categoryId, string? searchString)
         {
-            var products = _context.Products.Include(p => p.Category).AsQueryable();
+            var products = _unitOfWork.Product.GetAll(includeProperties: "Category");
 
             // Lọc theo danh mục nếu khách bấm từ menu Categories
             if (categoryId != null)
@@ -27,28 +26,26 @@ namespace FurnitureStoreWeb.Controllers
             // Lọc theo từ khóa nếu khách dùng ô Tìm kiếm (Kính lúp)
             if (!string.IsNullOrEmpty(searchString))
             {
-                products = products.Where(p => p.Name.Contains(searchString));
+                products = products.Where(p => p.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase));
             }
 
-            return View(await products.ToListAsync());
+            return View(products.ToList());
         }
-        // GET: /Shop/Details/5 (Xem chi tiết 1 sản phẩm)
-        public async Task<IActionResult> Details(int? id)
+
+        // GET: /Shop/Details/5
+        public IActionResult Details(int? id)
         {
             if (id == null) return NotFound();
 
             // Tìm sản phẩm theo ID, lấy kèm luôn thông tin Danh mục (Category)
-            var product = await _context.Products
-                .Include(p => p.Category)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var product = _unitOfWork.Product.GetFirstOrDefault(m => m.Id == id, includeProperties: "Category");
 
             if (product == null) return NotFound();
 
             // Tìm thêm 4 sản phẩm cùng danh mục để làm phần "Sản phẩm liên quan"
-            ViewBag.RelatedProducts = await _context.Products
-                .Where(p => p.CategoryId == product.CategoryId && p.Id != product.Id)
+            ViewBag.RelatedProducts = _unitOfWork.Product.GetAll(p => p.CategoryId == product.CategoryId && p.Id != product.Id)
                 .Take(4)
-                .ToListAsync();
+                .ToList();
 
             return View(product);
         }

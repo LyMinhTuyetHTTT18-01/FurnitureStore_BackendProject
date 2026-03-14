@@ -1,8 +1,7 @@
-using FurnitureStoreData.Context;
 using FurnitureStoreData.Models;
+using FurnitureStoreData.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
 namespace FurnitureStoreWeb.Controllers
@@ -10,33 +9,32 @@ namespace FurnitureStoreWeb.Controllers
     [Authorize] // Yêu cầu đăng nhập để xem lịch sử đơn hàng
     public class OrderController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public OrderController(ApplicationDbContext context)
+        public OrderController(IUnitOfWork unitOfWork)
         {
-            _context = context;
+            _unitOfWork = unitOfWork;
         }
 
         // GET: /Order/Index
         // Hiển thị danh sách các đơn hàng của user đang đăng nhập
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
             if (userIdClaim == null) return RedirectToAction("Login", "Account");
 
             int userId = int.Parse(userIdClaim.Value);
 
-            var orders = await _context.Orders
-                .Where(o => o.AppUserId == userId)
+            var orders = _unitOfWork.Order.GetAll(o => o.AppUserId == userId)
                 .OrderByDescending(o => o.OrderDate)
-                .ToListAsync();
+                .ToList();
 
             return View(orders);
         }
 
         // GET: /Order/Details/5
         // Hiển thị chi tiết của một đơn hàng
-        public async Task<IActionResult> Details(int id)
+        public IActionResult Details(int id)
         {
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
             if (userIdClaim == null) return RedirectToAction("Login", "Account");
@@ -44,10 +42,8 @@ namespace FurnitureStoreWeb.Controllers
             int userId = int.Parse(userIdClaim.Value);
 
             // Fetch order and include details & products
-            var order = await _context.Orders
-                .Include(o => o.OrderDetails)
-                .ThenInclude(od => od.Product)
-                .FirstOrDefaultAsync(o => o.Id == id && o.AppUserId == userId); // Đảm bảo chỉ xem được đơn của mình
+            // using string based include for multiple levels
+            var order = _unitOfWork.Order.GetFirstOrDefault(o => o.Id == id && o.AppUserId == userId, includeProperties: "OrderDetails.Product");
 
             if (order == null)
             {
